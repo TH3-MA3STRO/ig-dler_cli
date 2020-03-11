@@ -1,4 +1,4 @@
-# ig-dler
+# ig-dler_cli
 
 A CLI tool which you can use to download DP, highlights, stories, posts of an instagram
 profile without using the official instagram API
@@ -6,6 +6,7 @@ profile without using the official instagram API
 ## __Prerequisites__
 
 > python >3.7
+
 > A Terminal of course xD
 
 ## __Requirements__
