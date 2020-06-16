@@ -13,16 +13,7 @@ import requests
 
 
 def test_login(session):
-    variables = {}
-    variables_json = json.dumps(variables,separators=(',',':'))
-    host = 'www.instagram.com/graphql/query/'
-    data = "d6f4427fbe92d846298cf93df0b937d3"
-    params = {
-        'query_hash': data,
-        'variables': variables_json
-    }
-    res = session.get('https://{}'.format(host),params=params)
-    return res.json()['data']['user'] is not None
+    return session.get('https://www.instagram.com/data/shared_data/').json()['config']['viewer'] is not None
 
 
 def login(username, password):
@@ -51,7 +42,7 @@ def login(username, password):
     pattern = re.compile('window._sharedData')
     script = body.find("script", text=pattern)
 
-    script = script.get_text().replace('window._sharedData = ', '')[:-1]
+    script = script.string.replace('window._sharedData = ', '')[:-1]
     data = json.loads(script)
 
     csrf = data['config'].get('csrf_token')
@@ -76,11 +67,13 @@ def get_id(username):
         page = requests.get(link)
     except requests.exceptions.MissingSchema:
         print('Please Enter a valid url')
-    soup2 = BeautifulSoup(page.text, 'lxml')
-    scrips = soup2.find_all('script')
-    for i in scrips:
-        if '"id":' in i.text:
-            scrip = scrips[scrips.index(i)].text
-    scrip = json.loads(
-        '{'+scrip[scrip.index('"id":'):scrip.index(',', scrip.index('"id":'))]+'}')
-    return scrip['id']
+    soup = BeautifulSoup(page.content, 'html.parser')
+    body = soup.find('body')
+    pattern = re.compile('window._sharedData')
+    script = body.find("script", text=pattern)
+    script = script.string.replace('window._sharedData = ', '')[:-1]
+    data = json.loads(script)
+    return data['entry_data']["ProfilePage"][0]['graphql']['user']['id']
+
+a = get_id('th3_ma3stro')
+print(a)

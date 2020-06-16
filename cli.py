@@ -34,11 +34,12 @@ if args.login:
                 try:
                     cookiefile = int(input('Enter the file no. which you wish to use: '))
                     cookiefile = files[int(cookiefile)-1]
+                    break
                 except ValueError or IndexError:
                     print('Please enter one of the specified numbers!')
                     continue
 
-            print(f"Using {cookiefile.split('/')[-1]}'s cookies'")
+            print(f"Using {cookiefile.split('/')[-1]}'s cookies")
 
             with open(cookiefile, 'rb') as in_cookies:
                 new_session.cookies.update(pickle.load(in_cookies))
